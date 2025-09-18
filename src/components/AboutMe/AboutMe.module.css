@@ -1,0 +1,293 @@
+/* Light palette pe fundal alb */
+.wrapper {
+  --card-bg: rgba(17,17,17,0.04);
+  --stroke: rgba(17,17,17,0.08);
+  --text: #111111;
+  --muted: #6b7280;
+
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(48px, 8vw, 96px) clamp(16px, 5vw, 32px);
+}
+
+/* === REVEAL pentru CASETE mari ======================================= */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .6s ease, transform .6s ease;
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.isVisible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.title {
+  font-size: clamp(28px, 4vw, 40px);
+  margin: 0 0 12px;
+  color: var(--text);
+}
+
+.subTitle {
+  font-size: clamp(20px, 2.8vw, 24px);
+  margin: 0 0 16px;
+  color: var(--text);
+}
+
+.lead {
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 8px 0 16px;
+}
+
+/* DOAR descrierea: începe spălăcit și se nuanțează când intră în viewport */
+.bioReveal {
+  color: rgba(17, 17, 17, 0.26);
+  filter: saturate(70%) contrast(90%);
+  opacity: 0.6;
+  transition: color .5s ease, opacity .5s ease, filter .5s ease;
+}
+.bioRevealOn {
+  color: var(--text);
+  filter: saturate(110%) contrast(105%);
+  opacity: 1;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.2fr .8fr;
+  gap: 24px;
+}
+@media (max-width: 920px) {
+  .grid { grid-template-columns: 1fr; }
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--stroke);
+  border-radius: 18px;
+  padding: clamp(16px, 3vw, 24px);
+}
+
+.bullets {
+  margin: 12px 0 20px;
+  padding-left: 18px;
+  color: var(--text);
+}
+.bullets li { margin: 8px 0; }
+
+.actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.primaryBtn,
+.ghostBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform .15s ease, background .2s ease, border-color .2s ease;
+}
+
+.primaryBtn {
+  background: #111;
+  color: #fff;
+}
+.primaryBtn:hover { transform: translateY(-1px); }
+
+.ghostBtn {
+  border: 1px solid var(--stroke);
+  color: var(--text);
+  background: transparent;
+}
+.ghostBtn:hover { transform: translateY(-1px); border-color: #111; }
+
+/* === Social (fundal negru) + See Projects ============================ */
+.socialSection {
+  margin-top: 24px;
+  background: linear-gradient(to right, #000 0%, #222 40%, rgba(0,0,0,0.1) 100%);
+  border-radius: 20px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+/* Iconițe social media pe negru */
+.socialIcons {
+  display: flex;
+  gap: 20px;
+}
+
+.socialIcons a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.socialIcons a svg {
+  width: 22px;
+  height: 22px;
+}
+
+.socialIcons a:hover {
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateY(-2px);
+  color: var(--accent, #ff5a3c);
+}
+
+/* Butonul "See projects" pe fundal negru */
+.socialSection .ghostBtn {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  background: transparent;
+}
+.socialSection .ghostBtn:hover {
+  border-color: #fff;
+  transform: translateY(-2px);
+}
+
+/* Foto card */
+.photoCard {
+  background: var(--card-bg);
+  border: 1px solid var(--stroke);
+  border-radius: 18px;
+  padding: 12px;
+  display: grid;
+  gap: 8px;
+  align-content: start;
+}
+
+.photo {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 14px;
+  object-fit: cover;
+}
+
+.caption {
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* Timeline */
+.timeline {
+  margin-top: 32px;
+  background: linear-gradient(180deg, rgba(17,17,17,0.04), rgba(17,17,17,0.02));
+  border: 1px solid var(--stroke);
+  border-radius: 18px;
+  padding: 20px;
+}
+
+.timelineList { list-style: none; margin: 0; padding: 0; }
+
+.timelineItem {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px dashed var(--stroke);
+}
+.timelineItem:last-child { border-bottom: none; }
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #111;
+  margin-top: 6px;
+}
+
+.period {
+  color: var(--text);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.detail { color: var(--muted); line-height: 1.6; }
+
+/* === SKILLS: taguri + stagger ======================================= */
+.skills {
+  margin-top: 24px;
+  background: var(--card-bg);
+  border: 1px solid var(--stroke);
+  border-radius: 18px;
+  padding: 20px;
+}
+
+.skillTags {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.skillTags li {
+  background: rgba(17,17,17,0.06);
+  border: 1px solid var(--stroke);
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity .5s ease, transform .5s ease;
+}
+.skillsOn li {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* stagger delays */
+.skillTags li:nth-child(1) { transition-delay: .05s; }
+.skillTags li:nth-child(2) { transition-delay: .10s; }
+.skillTags li:nth-child(3) { transition-delay: .15s; }
+.skillTags li:nth-child(4) { transition-delay: .20s; }
+.skillTags li:nth-child(5) { transition-delay: .25s; }
+.skillTags li:nth-child(6) { transition-delay: .30s; }
+.skillTags li:nth-child(7) { transition-delay: .35s; }
+.skillTags li:nth-child(8) { transition-delay: .40s; }
+.skillTags li:nth-child(9) { transition-delay: .45s; }
+.skillTags li:nth-child(10){ transition-delay: .50s; }
+
+.skillTags li:hover {
+  background: rgba(17,17,17,0.12);
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .socialSection {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .actions {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+/* reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .isVisible,
+  .bioReveal, .bioRevealOn,
+  .skillTags li, .skillsOn li {
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}

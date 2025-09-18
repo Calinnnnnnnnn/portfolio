@@ -1,0 +1,261 @@
+.messageSlot::before {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 12px;
+  }:root{
+  /* START (clip 1): fără margini, fără colțuri, fără padding */
+  --hero-inset-v: 0px;   /* sus + jos inițial */
+  --hero-inset-h: 0px;   /* stânga + dreapta inițial */
+  --hero-radius: 0px;    /* colțuri inițial */
+  --hero-pad: 0px;       /* padding inițial */
+
+  /* Mesaje */
+  --msg-slot-h: 168px;
+  --msg-lift: 58px;
+  --roll-duration-out: 300ms;
+  --roll-duration-in: 450ms;
+  --perspective: 1000px;
+
+  --slot-tighten: 100px;
+}
+
+/* Cadru pe toată înălțimea viewport-ului */
+.heroFrame {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  z-index: 0;
+  background: transparent;
+}
+
+/* COMPACT (clip 2): margini mult mai mici */
+.frameCompact {
+  --hero-inset-v: 7px;   /* sus + jos - mărit de la 1px */
+  --hero-inset-h: 0.5px; /* stânga + dreapta - redus de la 1px */
+  --hero-radius: 15px;    /* colțuri - redus de la 12px */
+  --hero-pad: 8px;       /* padding interior - redus de la 16px */
+}
+
+/* Panoul care se „strânge" (margini egale controlate prin inset) */
+.heroPanel {
+  position: absolute;
+  /* SUS/JOS | STÂNGA/DREAPTA */
+  inset: var(--hero-inset-v) var(--hero-inset-h);
+  border-radius: var(--hero-radius);
+  overflow: hidden;
+  background: #000;
+  transition:
+    inset 600ms cubic-bezier(.2,.8,.2,1),
+    border-radius 600ms cubic-bezier(.2,.8,.2,1),
+    transform 600ms cubic-bezier(.2,.8,.2,1);
+}
+
+/* „Restrângere" vizuală stabilă (fără reflow) când intră clipul 2 */
+.frameCompact .heroPanel {
+  transform: scale(0.98); /* mai puțin scale pentru efect mai subtil */
+}
+
+/* Video & overlay */
+.videoWrapper {
+  position: absolute; inset: 0;
+  overflow: hidden;
+  border-radius: inherit; /* urmează colțurile în compact */
+  z-index: 0;
+}
+
+.heroVideo {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  /* transform-ul (zoom/parallax) e setat din JS la scroll */
+  transition: opacity 1s ease; /* fade între clipuri */
+}
+
+.overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.35); z-index: 1; }
+
+/* Conținut centrat perfect */
+.heroInner {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* centrare verticală */
+  align-items: center;
+
+  padding: var(--hero-pad); /* 0 la start -> devine >0 în compact */
+  transition: padding 600ms cubic-bezier(.2,.8,.2,1);
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+/* Slot pentru titlu: FLEX pentru centrare exactă */
+.messageSlot {
+  position: relative;
+  height: var(--msg-slot-h);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: var(--perspective);
+  overflow: hidden; /* ascunde „rola" */
+}
+.messageSlotLifting { 
+    overflow: visible; 
+    height: calc(var(--msg-slot-h) - var(--slot-tighten));
+    transition: height 600ms cubic-bezier(.2, .8, .2, 1);
+} /* evită tăierea la slide-up */
+
+/* Titlul — vizibil de la start */
+.heroTitle {
+  position: relative;
+  margin: 0;
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1.06;
+  color: #fff;
+  opacity: 1;
+  transition: transform 0.8s ease; /* slide-up */
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+  
+  /* Umbrele elegante pentru lizibilitate */
+  text-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.9),
+    0 4px 16px rgba(0, 0, 0, 0.7),
+    0 1px 2px rgba(0, 0, 0, 1);
+}
+
+/* Text animat pentru reflow smooth */
+.animatedText {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.3em;
+  line-height: 1.1;
+}
+
+.word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: wordSlideIn 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  white-space: nowrap;
+}
+
+@keyframes wordSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* „Rola" (flip X) — OUT apoi IN */
+.rollOut { animation: rollOut var(--roll-duration-out) ease forwards; }
+.rollIn  { animation: rollIn  var(--roll-duration-in)  ease forwards; }
+
+@keyframes rollOut {
+  0%   { opacity: 1; transform: rotateX(0deg); }
+  100% { opacity: 0; transform: rotateX(90deg) translateY(-10px); }
+}
+@keyframes rollIn {
+  0%   { opacity: 0; transform: rotateX(-90deg) translateY(10px); }
+  100% { opacity: 1; transform: rotateX(0deg); }
+}
+
+/* Stări finale */
+.holdFinal   { opacity: 1; }
+.slideUpLock { 
+  transform: translateY(calc(-1 * var(--msg-lift))) scale(1.02);
+  font-size: 3.2rem; /* mai mic pentru a forța wrap pe 2 rânduri */
+}
+
+/* Subtitlu + buton */
+.subContainer {
+  margin-top: 1px; /* redus de la 12px pentru spațiu mai mic */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.compactBelow { margin-top: 2px; } /* redus de la 4px */
+
+.heroSubtitle {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+  margin: 0;
+}
+.heroButton {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 14px 32px;
+  border-radius: 28px;
+  background: #ffffff;
+  color: #111111;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 0.7s ease 0.15s, background 0.3s ease, box-shadow 0.3s ease;
+}
+.heroButton:hover { background: #e5e5e5; box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+.revealFade { opacity: 1 !important; }
+.revealFadeBtn { opacity: 1 !important; }
+
+/* === Breakpoints: margini și colțuri doar în COMPACT === */
+@media (max-width: 768px) {
+  /* Override-uri DOAR când e compact - margini și mai mici */
+  .frameCompact {
+    --hero-inset-v: 2px;   /* mărit de la 1px */
+    --hero-inset-h: 0.5px; /* păstrat la 0.5px */
+    --hero-radius: 6px;    /* redus de la 10px */
+    --hero-pad: 6px;       /* redus de la 12px */
+  }
+  .heroTitle { 
+    font-size: 2.6rem; 
+    line-height: 1.08; 
+  }
+  .slideUpLock {
+    font-size: 2.2rem;
+  }
+  .animatedText {
+    gap: 0.25em;
+  }
+  .frameCompact .heroPanel { transform: scale(0.985); }
+}
+
+@media (max-width: 480px) {
+  .frameCompact {
+    --hero-inset-v: 1.5px; /* mărit de la 0.5px */
+    --hero-inset-h: 0px;   /* eliminat complet marginea laterală */
+    --hero-radius: 4px;    /* redus de la 8px */
+    --hero-pad: 4px;       /* redus de la 8px */
+  }
+  .heroTitle { 
+    font-size: 2rem; 
+    line-height: 1.1;
+    /* Shadow mai mic pe mobil pentru performanță */
+    text-shadow: 
+      0 1px 4px rgba(0, 0, 0, 0.8),
+      0 2px 8px rgba(0, 0, 0, 0.4),
+      0 1px 1px rgba(0, 0, 0, 0.9);
+  }
+  .slideUpLock {
+    font-size: 1.8rem; /* forțează 2 rânduri pe mobil */
+  }
+  .animatedText {
+    gap: 0.2em;
+  }
+  .frameCompact .heroPanel { transform: scale(0.99); } /* aproape deloc scale pe mobil */
+  .heroSubtitle { font-size: 1rem; }
+  .heroButton { padding: 8px 20px; font-size: 13px; }
+}

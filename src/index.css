@@ -1,0 +1,99 @@
+/* ================================
+   INDEX.CSS
+   Layout general + reset suplimentar
+   ================================ */
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--page-bg); /* alb pur */
+}
+
+/* Scroll smooth */
+html {
+  scroll-behavior: smooth;
+}
+
+section[id],
+div[id] {
+  scroll-margin-top: 80px; /* corecție pentru navbar fix */
+}
+
+/* Container principal */
+.app {
+  width: 100%;
+  min-height: 100vh;
+  background: transparent; /* lăsăm body să dicteze fundalul */
+  font-family: var(--font-sans);
+}
+
+/* Zone temporare de test scroll */
+.temp-content {
+  padding-top: 120px; /* spațiu pentru navbar fix */
+}
+
+/* Hero Section */
+.hero-section {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+  padding: 0 20px;
+}
+
+.hero-section h1 {
+  font-size: 4rem;
+  font-weight: 800;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.hero-section p {
+  font-size: 1.25rem;
+  color: #6b7280;
+  max-width: 600px;
+}
+
+/* Content Section */
+.content-section {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 100px 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.content-section h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.content-section p {
+  font-size: 1.125rem;
+  color: #6b7280;
+  max-width: 600px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-section h1 {
+    font-size: 2.5rem;
+  }
+  .hero-section p {
+    font-size: 1.125rem;
+  }
+  .content-section h2 {
+    font-size: 2rem;
+  }
+  .content-section p {
+    font-size: 1rem;
+  }
+}

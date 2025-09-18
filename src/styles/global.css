@@ -1,0 +1,70 @@
+/* ================================
+   GLOBAL.CSS
+   Variabile globale + reset fundamental
+   ================================ */
+
+/* Reset minimal */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Variabile globale */
+:root {
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+               "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+
+  /* Fundal general al paginii — acum ALB PUR */
+  --page-bg: #ffffff;
+
+  /* Font special pentru numere/tabular */
+  --numeric: tabular-nums lining-nums;
+
+  --radius-bridge: 42px;
+  --projects-bg: #f9fafb;
+  --contact-bg: #ffffff;
+
+}
+
+/* Font + tipografie globală */
+html {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  line-height: 1.5;
+}
+
+body {
+  font-variant-numeric: var(--numeric);
+  background: var(--page-bg); /* fundal global alb */
+  color: #111; /* text implicit */
+}
+
+/* Elemente form să moștenească fontul */
+button, input, textarea, select {
+  font: inherit;
+}
+
+/* Headings */
+h1, h2, h3 {
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+small {
+  font-size: 0.875rem;
+}

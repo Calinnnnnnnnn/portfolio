@@ -1,0 +1,65 @@
+/* ================================
+   APP.CSS
+   Stiluri specifice aplicației
+   ================================ */
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Containerul principal al aplicației */
+.app {
+  width: 100%;
+  min-height: 100vh;
+  background: transparent; /* controlat acum de body din global.css */
+  font-family: var(--font-sans);
+}
+
+/* Navbar fix */
+.modal-open .navbar {
+  display: none !important;
+}
+
+/* Scroll testing / conținut temporar */
+.temp-content {
+  padding-top: 120px; /* spațiu pentru navbar fix */
+}
+
+/* Content Section */
+.content-section {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 100px 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.content-section h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.content-section p {
+  font-size: 1.125rem;
+  color: #6b7280;
+  max-width: 600px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .content-section h2 {
+    font-size: 2rem;
+  }
+
+  .content-section p {
+    font-size: 1rem;
+  }
+}

@@ -1,0 +1,291 @@
+/* =============================
+   ContactIntro.module.css (modificat)
+   ============================= */
+
+/* 1) Variabile: overlap fin + cât coborâm muchia de jos */
+:root{
+  --seam-overlap: 2px;
+  --intro-drop: 18vh; /* ↑ crește/scade ca să vezi mai mult/mai puțin din imagine */
+}
+
+/* 2) Secțiunea intro — aproape toată imaginea, doar muchia de jos coborâtă */
+.intro {
+  position: relative;
+  z-index: 2;
+  height: clamp(520px, 88vh, 1200px); /* ↑ aproape toată imaginea */
+  min-height: 420px;
+  overflow: hidden;
+
+  /* sus: identic cu vecinii */
+  margin-top: calc(-1 * var(--radius-bridge) + var(--seam-overlap));
+
+  /* jos: ADĂUGĂM spațiu cu --intro-drop (coboară muchia de jos) */
+  margin-bottom: calc(
+    -1 * (var(--radius-bridge) + var(--seam-overlap)) + var(--intro-drop)
+  );
+
+  /* padding-urile rămân neschimbate (aliniere cu colțurile rotunjite) */
+  padding-top: calc(var(--radius-bridge) + var(--seam-overlap));
+  padding-bottom: calc(var(--radius-bridge) + var(--seam-overlap));
+}
+
+/* Mobile: puțin mai “scurt” ca să nu ocupe prea mult */
+@media (max-width: 600px) {
+  :root { --intro-drop: 10vh; }
+  .intro { height: clamp(420px, 75vh, 1000px); }
+}
+
+/* ====== Fundalul cu imagine ====== */
+.background {
+  position: absolute;
+  inset: 0;
+  background: url('/src/assets/contact-intro.jpg') center/cover no-repeat;
+  --bg-scale: 1.05;
+  transform: scale(var(--bg-scale));
+  will-change: transform;
+  transition: transform 60ms linear;
+  z-index: 0;
+}
+
+
+.background::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg, 
+    rgba(15, 23, 42, 0.1) 0%, 
+    rgba(30, 41, 59, 0.05) 50%,
+    rgba(15, 23, 42, 0.1) 100%
+  );
+  pointer-events: none;
+}
+
+
+/* ====== Măști fixe sus/jos — continuitate între secțiuni ====== */
+.maskTop, 
+.maskBottom {
+  position: absolute; 
+  left: 0; 
+  right: 0;
+  pointer-events: none;
+  z-index: 3;
+  box-shadow: none;
+}
+
+/* SUS: aceeași culoare ca secțiunea precedentă (Projects) */
+.maskTop {
+  top: 0;
+  height: 84px;
+  background: #fff;
+  border-bottom-left-radius: var(--radius-bridge);
+  border-bottom-right-radius: var(--radius-bridge);
+  box-shadow: 
+    0 1px 0 #f7f8fb inset,
+    0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+/* JOS: aceeași culoare ca secțiunea următoare (Contact) */
+.maskBottom {
+  bottom: 0;
+  height: 30px;
+  background: var(--contact-bg, #ffffff); /* fallback alb pur */
+  border-top-left-radius: var(--radius-bridge);
+  border-top-right-radius: var(--radius-bridge);
+  box-shadow: 
+    0 -1px 0 var(--contact-bg, #fff) inset,
+    0 -8px 24px rgba(0, 0, 0, 0.06);
+}
+
+/* ====== Textul de pe imagine — fără background, centrat perfect ====== */
+.content {
+  position: relative;
+  z-index: 4;
+  color: #fff; /* fallback dacă nu suportă background-clip:text */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+
+  max-width: min(92vw, 900px);
+  background: none;
+  backdrop-filter: none;
+  padding: 0;
+}
+
+/* Stivă de 3 rânduri */
+.headlineStack {
+  display: grid;
+  gap: clamp(6px, 1.6vw, 16px);
+}
+
+/* Un rând (ghost + reveal suprapuse) */
+.revealWrap {
+  position: relative;
+  display: inline-block;
+  line-height: 1.06;
+  margin: 0;
+  font-size: clamp(26px, 4.4vw, 48px);
+  letter-spacing: -0.02em;
+  font-weight: 800;
+}
+
+/* 0) Strat BLUR (halo în spatele literelor) */
+.blurLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  color: transparent;             /* text invizibil, rămâne doar halo-ul */
+  text-shadow:
+    0 0 10px rgba(0,0,0,.35),
+    0 0 20px rgba(0,0,0,.22),
+    0 0 32px rgba(0,0,0,.16);
+}
+
+/* 1) Textul “ghost” (decolorat) — vizibil permanent */
+.ghost {
+  position: relative;
+  z-index: 1;
+  color: rgba(255, 255, 255, 0.18);
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+}
+
+/* 2) Strat de deasupra, care se “umple” cu alb pe măsură ce crește --reveal */
+.revealText {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(90deg, #ffffff, #ffffff); /* alb pur */
+  background-repeat: no-repeat;
+  background-size: var(--reveal, 0%) 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+
+  /* update fin (JS setează --reveal din IntersectionObserver) */
+  transition: background-size 60ms linear; /* mai rapid ca să termine înăuntrul secțiunii */
+  will-change: background-size;
+}
+
+/* când secțiunea a fost deja dezvăluită complet, păstrăm textul colorat */
+.intro[data-revealed="true"] .revealText {
+  --reveal: 100%;
+  background-size: 100% 100%;
+  transition: none;
+}
+
+/* Dimensiuni text — doar micro-ajustări */
+.content h3 {
+  margin: 0;
+}
+
+/* ====== Social Icons ====== */
+.socialIcons {
+  margin-top: clamp(24px, 4vw, 40px);
+  display: flex;
+  justify-content: center;
+  gap: clamp(20px, 4vw, 36px);
+  z-index: 5;
+  position: relative;
+}
+
+.socialIcons a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+  color: #fff;
+}
+
+.socialIcons a svg {
+  width: 28px;
+  height: 28px;
+  transition: transform 0.3s ease;
+}
+
+/* Hover efect cu glow */
+.socialIcons a:hover {
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateY(-3px);
+}
+
+.socialIcons a:hover svg {
+  transform: scale(1.1);
+  color: var(--accent, #ff5a3c); /* folosește accentul global */
+}
+
+
+/* Responsive — doar lățimi/centrări, fără bg-uri */
+@media (max-width: 900px) {
+  .content { max-width: 90%; }
+}
+
+@media (max-width: 600px) {
+  .content { max-width: 90%; }
+  .blurLayer {
+    text-shadow:
+      0 0 8px rgba(0,0,0,.32),
+      0 0 18px rgba(0,0,0,.2);
+  }
+}
+
+/* MOBILE ONLY — maskTop cu fade din alb spre transparent */
+@media (max-width: 768px) {
+  /* poți regla doar aceste 3 variabile */
+  .maskTop {
+    --mask-top-h: clamp(54px, 12vw, 84px);  /* înălțimea măștii */
+    --mask-from: #fff;                      /* culoarea secțiunii de deasupra (Projects) */
+    --mask-to: transparent;                 /* în general transparent peste imagine */
+  }
+
+  .maskTop {
+    height: var(--mask-top-h);
+    background: transparent;                /* IMPORTANT: scoatem umplerea solidă pe mobil */
+    overflow: hidden;                        /* ca să taie exact pe curbă */
+    box-shadow: none;                        /* evită linia dură pe fade */
+  }
+
+  /* desenăm gradientul în interiorul măștii, respectând raza */
+  .maskTop::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    left:-2px; right:-2px; top:-2px;                /* overscan 1px */
+    background: linear-gradient(
+      to bottom,
+      var(--mask-from) 0%,
+      color-mix(in oklab, var(--mask-from) 85%, transparent) 35%,
+      color-mix(in oklab, var(--mask-from) 55%, transparent) 65%,
+      var(--mask-to) 100%
+    );
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
+    pointer-events: none;
+  }
+
+  /* (opțional) micro anti-alias pentru Safari/iOS */
+  .maskTop::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    height: 1px;
+    background: var(--mask-from);
+    opacity: .5;
+    pointer-events: none;
+  }
+}
+
+
+
