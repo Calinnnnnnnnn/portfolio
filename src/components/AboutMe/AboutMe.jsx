@@ -154,7 +154,7 @@ export default function AboutMe() {
 
         {/* Photo Card */}
         <figure className={`${styles.photoCard} ${styles.reveal}`} aria-label="Portrait">
-          <img src="/src/assets/profile.jpeg" alt="Calin Ilie portrait" className={styles.photo} />
+          <img src="profile.jpeg" alt="Calin Ilie portrait" className={styles.photo} />
           <figcaption className={styles.caption}>Bucharest · Palatul Victoria</figcaption>
         </figure>
       </div>
