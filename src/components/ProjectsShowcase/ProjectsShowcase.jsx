@@ -240,7 +240,7 @@ export default function ProjectsShowcase({
               <span key={i} className={styles.letterReveal} style={{ animationDelay: `${i * 100}ms` }}>{c}</span>
             ))}
           </h2>
-          <p className={styles.sublead}>Real products designed & shipped. Feel free to explore!</p>
+          <p className={styles.sublead}>Real products designed & shipped. Feel free to explore! Just click!</p>
         </header>
 
         <div className={styles.grid} ref={gridRef}>
@@ -315,14 +315,14 @@ export default function ProjectsShowcase({
                       </div>
                     )}
 
-                    {/* ↓↓↓ Buton mutat aici, în interiorul .device */}
+                    {/* ↓↓↓ Buton mutat aici, în interiorul .device 
                     <button
                       type="button"
                       className={`${styles.detailsBtn}`}
                       onClick={() => handleOpen(i)}
                     >
                       More details
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               );
