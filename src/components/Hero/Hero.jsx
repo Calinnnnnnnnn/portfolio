@@ -28,6 +28,9 @@ const Hero = () => {
   const [startedClip2, setStartedClip2] = useState(false);
   const [lastMessageShown, setLastMessageShown] = useState(false);
 
+  const DISABLE_SCROLL_ZOOM = true; // true fara zoom, false cu zoom
+
+
   // „Rola" la 1.7s; ultimul mesaj rămâne pe ecran
   useEffect(() => {
     const id = setInterval(() => {
@@ -52,16 +55,34 @@ const Hero = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentMessageIndex]);
 
-  // Scroll: zoom-in pe video (local față de hero), cu parallax subtil
+ // Scroll: (DEZACTIVAT) zoom/parallax pe video la scroll
   useEffect(() => {
     const v1 = videoRef1.current;
     const v2 = videoRef2.current;
     const frame = frameRef.current;
     if (!frame || (!v1 && !v2)) return;
 
-    const ZOOM_FULL = { base: 1.10, max: 1.25 };   // când e fullscreen (clip 1)
-    const ZOOM_COMPACT = { base: 1.05, max: 2.0 }; // când e compact (clip 2)
-    const PARALLAX_FACTOR = 0.15;
+    // Dezactivează pe: kill-switch global, mobil/tabletă, sau preferință de motion redus
+    const isMobile =
+      typeof window !== "undefined" &&
+      window.matchMedia("(max-width: 1024px)").matches;
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const disable = DISABLE_SCROLL_ZOOM || isMobile || prefersReducedMotion;
+
+    // Curățăm orice transform rămas și nu mai atașăm listeners
+    if (disable) {
+      if (v1) v1.style.transform = "";
+      if (v2) v2.style.transform = "";
+      return;
+    }
+
+    // (opțional) dacă vrei să păstrezi DOAR un parallax super-subtil, setează disable=false mai sus
+    const ZOOM_FULL = { base: 1.10, max: 1.25 };
+    const ZOOM_COMPACT = { base: 1.05, max: 1.1 }; // mult mai mic dacă re-activezi
+    const PARALLAX_FACTOR = 0.08;
 
     let ticking = false;
     const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
@@ -87,13 +108,14 @@ const Hero = () => {
     };
 
     update();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
     return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
     };
   }, [startedClip2]);
+
 
   // Clipul 1 s-a terminat (păstrăm ultimul frame până sincronizăm cu ultimul mesaj)
   const handleFirstVideoEnded = () => setFirstEnded(true);
@@ -143,6 +165,7 @@ const Hero = () => {
             autoPlay
             muted
             playsInline
+            preload="metadata"
             src="/HeroBackground/hero_video.mp4"
             onEnded={handleFirstVideoEnded}
             style={{ opacity: 1 }}
@@ -153,6 +176,7 @@ const Hero = () => {
             muted
             loop
             playsInline
+            preload="metadata"
             src="/HeroBackground/hero_video2.mp4"
             style={{ opacity: 0 }}
           />

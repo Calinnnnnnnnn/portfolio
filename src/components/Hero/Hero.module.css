@@ -259,3 +259,10 @@
   .heroSubtitle { font-size: 1rem; }
   .heroButton { padding: 8px 20px; font-size: 13px; }
 }
+
+@media (max-width: 1024px) {
+  .messageSlot::before {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}

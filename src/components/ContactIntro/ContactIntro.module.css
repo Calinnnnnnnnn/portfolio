@@ -47,6 +47,14 @@
   z-index: 0;
 }
 
+/* Kill zoom complet când setăm data-nozoom */
+.intro[data-nozoom="true"] .background {
+  transform: none !important;
+  will-change: auto !important;
+  transition: none !important;
+}
+
+
 
 .background::after {
   content: '';
@@ -287,5 +295,8 @@
   }
 }
 
+@media (max-width: 768px) {
+  .socialIcons a { backdrop-filter: none; background: rgba(0,0,0,0.28); }
+}
 
 
